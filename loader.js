@@ -1,6 +1,6 @@
 (function() {
     const CONFIG = {
-        baseUrl: 'https://id786.github.io/captcha-widget/',
+        baseUrl: 'https://gamerid47.github.io/captcha-widget/',
         files: [
             'captcha-verification.js',
             'captcha-widget.js',
