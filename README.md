@@ -18,22 +18,22 @@ A lightweight, self-hosted CAPTCHA system for web projects. No external APIs req
 Method 1: One-line inclusion (Easiest)
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/id786/captcha-widget@latest/auto-loader.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/auto-loader.js"></script>
 ```
 
 Method 2: Standard inclusion (Recommended)
 
 ```html
 <div id="captcha-container"></div>
-<script src="https://cdn.jsdelivr.net/gh/id786/captcha-widget@latest/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/loader.js"></script>
 ```
 
 Method 3: Manual initialization (Advanced)
 
 ```html
 <div id="my-captcha"></div>
-<script src="https://cdn.jsdelivr.net/gh/id786/captcha-widget@latest/captcha-verification.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/id786/captcha-widget@latest/captcha-widget.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/captcha-verification.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/captcha-widget.js"></script>
 <script>
     window.initCaptcha('my-captcha', {
         theme: 'dark',
@@ -209,7 +209,7 @@ Login Form Protection
     <button type="submit" class="protected-btn">Login</button>
 </form>
 
-<script src="https://cdn.jsdelivr.net/gh/id786/captcha-widget@latest/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/loader.js"></script>
 <script>
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -231,7 +231,7 @@ Download Protection
     Download Secure File
 </a>
 
-<script src="https://cdn.jsdelivr.net/gh/id786/captcha-widget@latest/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/loader.js"></script>
 <script>
     document.querySelector('a.protected-btn').addEventListener('click', function(e) {
         if (!window.captchaVerification.getVerificationStatus()) {
@@ -265,26 +265,26 @@ Multi-CAPTCHA Page
 Primary CDN (Recommended)
 
 ```html
-https://cdn.jsdelivr.net/gh/id786/captcha-widget@latest/
+https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/
 ```
 
 GitHub Pages (Alternative)
 
 ```html
-https://id786.github.io/captcha-widget/
+https://gamerid47.github.io/captcha-widget/
 ```
 
 Individual Files
 
 ```html
 <!-- Loader -->
-<script src="https://cdn.jsdelivr.net/gh/id786/captcha-widget@latest/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/loader.js"></script>
 
 <!-- Auto-loader -->
-<script src="https://cdn.jsdelivr.net/gh/id786/captcha-widget@latest/auto-loader.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/auto-loader.js"></script>
 
 <!-- Core files -->
-<script src="https://cdn.jsdelivr.net/gh/id786/captcha-widget@latest/captcha-widget.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/id786/captcha-widget@latest/captcha-verification.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/id786/captcha-widget@latest/styles.css">
+<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/captcha-widget.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/captcha-verification.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/styles.css">
 ```
