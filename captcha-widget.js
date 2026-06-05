@@ -905,8 +905,10 @@ class CustomCaptcha {
             captchaType1.style.display = 'block';
             this.initializeType1();
         } else if (type === 2) {
-            captchaType2.style.display = 'block';
-            this.initializeType2();
+    captchaType2.style.display = 'block';
+    setTimeout(() => {
+        this.initializeType2();
+    }, 0);
         } else if (type === 3) {
             captchaType3.style.display = 'block';
             this.initializeType3();
@@ -1000,7 +1002,8 @@ class CustomCaptcha {
 
         this.currentShapeType = this.shapeTypes[Math.floor(Math.random() * this.shapeTypes.length)];
 
-        const trackWidth = 250;
+        const trackElement = this.container.querySelector(`.puzzle-trackgic-${instanceId}`);
+const trackWidth = trackElement ? trackElement.getBoundingClientRect().width : 250;
         const shapeWidth = 40;
         const minTargetPos = 10 + 20;
         const maxTargetPos = trackWidth - shapeWidth - 10 - 20;
@@ -1095,11 +1098,12 @@ class CustomCaptcha {
             this.sliderPosition = newPosition;
             puzzleSlider.style.left = newPosition + 'px';
 
-            const trackWidth = 250;
-            const minShapePosition = 10;
-            const maxShapePosition = trackWidth - 40 - 10;
-
-            const shapeNewPosition = minShapePosition + ((newPosition - leftGap) / availableWidth) * (maxShapePosition - minShapePosition);
+            const trackElement = this.container.querySelector(`.puzzle-trackgic-${instanceId}`);
+const trackWidth = trackElement ? trackElement.getBoundingClientRect().width : 250;
+const minShapePosition = 10;
+const maxShapePosition = trackWidth - 40 - 10;
+const progress = (newPosition - leftGap) / availableWidth;
+const shapeNewPosition = minShapePosition + progress * (maxShapePosition - minShapePosition);
             randomShape.style.left = shapeNewPosition + 'px';
         }
 
