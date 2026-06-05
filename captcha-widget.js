@@ -1,6 +1,8 @@
 /**
  * CustomCaptcha - Updated CAPTCHA with multiple verification types
  * Enhanced version with image selection, slide puzzle, and image click CAPTCHAs
+ * Made by ALFAJ (Gamer Id47)
+ * Distrubute to all for FREE
  */
 class CustomCaptcha {
     constructor(containerId, options = {}) {
