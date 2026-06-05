@@ -95,10 +95,14 @@ class CaptchaVerification {
         }
         
         if (element.classList.contains(`protected-con-${instanceId}`) || 
-            element.getAttribute('data-was-protected-con') === instanceId) {
-            element.style.display = 'none';
-            element.removeAttribute('data-was-protected-con');
-        }
+    element.getAttribute('data-was-protected-con') === instanceId) {
+    element.style.display = 'none';
+    // Restore the original class so it can be found again on re-verify
+    if (element.getAttribute('data-was-protected-con') === instanceId) {
+        element.classList.add(`protected-con-${instanceId}`);
+        element.removeAttribute('data-was-protected-con');
+    }
+}
         
         if (element.classList.contains(`captcha-verified-indicator-${instanceId}`)) {
             element.style.display = 'none';
