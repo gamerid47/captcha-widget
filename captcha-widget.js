@@ -1409,30 +1409,62 @@ startExpiryTimer() {
         this.expireVerification();
     }, this.options.expiry * 1000);
 }
-
 expireVerification() {
     const instanceId = this.instanceId;
     this.isVerified = false;
+    
     if (window.captchaVerification) {
         window.captchaVerification.resetVerification(instanceId);
     }
+    
     const containergic = document.getElementById(`captchaContainergic-${instanceId}`);
     const textElementgic = document.getElementById(`statusTextgic-${instanceId}`);
+    const modalgic = document.getElementById(`verificationModalgic-${instanceId}`);
+    
     if (containergic) {
         containergic.classList.remove(`success-stategic-${instanceId}`);
         containergic.classList.add(`failed-stategic-${instanceId}`);
     }
+    
     if (textElementgic) {
         textElementgic.classList.remove(`success-textgic-${instanceId}`);
+        textElementgic.classList.remove(`loading-textgic-${instanceId}`);
         textElementgic.classList.add(`failed-textgic-${instanceId}`);
         textElementgic.textContent = 'Verification expired.';
     }
+    
+    // Hide modal if it's open
+    if (modalgic) {
+        modalgic.style.display = 'none';
+    }
+    
+    // Replace the green tick SVG back with the original checkbox trigger
+    const successTick = document.querySelector(`.tick-animgic-${instanceId}`);
+    if (successTick) {
+        const newTrigger = document.createElement('div');
+        newTrigger.id = `verifyTriggergic-${instanceId}`;
+        newTrigger.className = `z7g8h9igic-${instanceId}`;
+        successTick.replaceWith(newTrigger);
+        
+        // Re-bind the click event
+        newTrigger.addEventListener('click', () => {
+            this.handleTriggerClick();
+        });
+    }
+    
+    // Hide the loading bar
+    const loadingBarContainergic = document.querySelector(`.loading-bar-containergic-${instanceId}`);
+    if (loadingBarContainergic) {
+        loadingBarContainergic.classList.remove(`activegic-${instanceId}`);
+    }
+    
     document.dispatchEvent(new CustomEvent('captchaExpired', {
         detail: {
             instanceId: instanceId
         }
     }));
 }
+
     reset() {
     clearTimeout(this.expiryTimer);
     this.expiryTimer = null;
