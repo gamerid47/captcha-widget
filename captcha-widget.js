@@ -8,8 +8,11 @@ class CustomCaptcha {
     constructor(containerId, options = {}) {
         this.container = document.getElementById(containerId);
         this.options = options;
+this.options.expiry = typeof this.options.expiry === 'number' ? this.options.expiry : 60;
         this.instanceId = containerId.replace('captcha-container-', '') || '1';
         this.isVerified = false;
+        this.expiryTimer = null;
+this.expiryTimestamp = null;
         
         if (!this.container) {
             console.error('CAPTCHA container not found:', containerId);
@@ -1318,6 +1321,9 @@ const shapeNewPosition = minShapePosition + progress * (maxShapePosition - minSh
         }
         
         this.isVerified = true;
+this.startExpiryTimer();
+
+// Notify verification system
 
         // Notify verification system
         if (window.captchaVerification) {
@@ -1392,9 +1398,45 @@ const shapeNewPosition = minShapePosition + progress * (maxShapePosition - minSh
     getVerificationStatus() {
         return this.isVerified;
     }
+startExpiryTimer() {
+    if (this.options.expiry === 0) {
+        return;
+    }
+    clearTimeout(this.expiryTimer);
+    this.expiryTimestamp = Date.now() + (this.options.expiry * 1000);
+    this.expiryTimer = setTimeout(() => {
+        if (!this.isVerified) return;
+        this.expireVerification();
+    }, this.options.expiry * 1000);
+}
 
+expireVerification() {
+    const instanceId = this.instanceId;
+    this.isVerified = false;
+    if (window.captchaVerification) {
+        window.captchaVerification.resetVerification(instanceId);
+    }
+    const containergic = document.getElementById(`captchaContainergic-${instanceId}`);
+    const textElementgic = document.getElementById(`statusTextgic-${instanceId}`);
+    if (containergic) {
+        containergic.classList.remove(`success-stategic-${instanceId}`);
+        containergic.classList.add(`failed-stategic-${instanceId}`);
+    }
+    if (textElementgic) {
+        textElementgic.classList.remove(`success-textgic-${instanceId}`);
+        textElementgic.classList.add(`failed-textgic-${instanceId}`);
+        textElementgic.textContent = 'Verification expired.';
+    }
+    document.dispatchEvent(new CustomEvent('captchaExpired', {
+        detail: {
+            instanceId: instanceId
+        }
+    }));
+}
     reset() {
-        this.isVerified = false;
+    clearTimeout(this.expiryTimer);
+    this.expiryTimer = null;
+    this.isVerified = false;
         this.selectedImages = [];
         this.clickedItems = [];
         this.clickCounter = 0;
