@@ -314,12 +314,14 @@ class CustomCaptcha {
                 }
 
                 .puzzle-targetgic-${this.instanceId}.trianglegic-${this.instanceId} {
-                    width: 0;
-                    height: 0;
-                    background: none;
-                    border-left: 20px solid transparent;
-                    border-right: 20px solid transparent;
-                    border-bottom: 35px solid rgba(76, 175, 80, 0.3);
+                    border-top: none;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 35px solid rgba(76, 175, 80, 0.5);
+  width: 0;
+  height: 0;
+  background: none;
+  animation: none;
                 }
 
                 .puzzle-targetgic-${this.instanceId}.diamondgic-${this.instanceId} {
