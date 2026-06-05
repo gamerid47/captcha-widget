@@ -39,20 +39,32 @@ class CaptchaVerification {
     }
 
     enableInstanceContent(instanceId) {
-    document.querySelectorAll(`.protected-btn-${instanceId}`).forEach(btn => {
-        btn.disabled = false;
-        // Store the original class so we can restore it on disable
-        btn.setAttribute('data-original-class', `protected-btn-${instanceId}`);
-        btn.classList.remove(`protected-btn-${instanceId}`);
-        btn.classList.add(`captcha-verified-${instanceId}`);
-    });
+        // Handle buttons
+        document.querySelectorAll(`.protected-btn-${instanceId}`).forEach(btn => {
+            btn.disabled = false;
+            btn.setAttribute('data-original-class', `protected-btn-${instanceId}`);
+            btn.classList.remove(`protected-btn-${instanceId}`);
+            btn.classList.add(`captcha-verified-${instanceId}`);
+        });
+
+        // Handle content
         document.querySelectorAll(`.protected-con-${instanceId}`).forEach(content => {
-    content.style.display = 'block';
-    // Store marker so we can identify this on disable
-    content.setAttribute('data-was-protected-con', instanceId);
-    content.classList.remove(`protected-con-${instanceId}`);
-    content.classList.add(`captcha-verified-${instanceId}`);
-});
+            content.setAttribute('data-was-protected-con', instanceId);
+            content.classList.remove(`protected-con-${instanceId}`);
+            content.classList.add(`captcha-verified-${instanceId}`);
+            content.style.display = 'block';
+        });
+
+        // Also handle content that has data-was-protected-con but lost the class (re-verify after expiry)
+        document.querySelectorAll(`[data-was-protected-con="${instanceId}"]`).forEach(content => {
+            if (!content.classList.contains(`captcha-verified-${instanceId}`)) {
+                content.classList.remove(`protected-con-${instanceId}`);
+                content.classList.add(`captcha-verified-${instanceId}`);
+                content.style.display = 'block';
+            }
+        });
+
+        // Handle indicators
         document.querySelectorAll(`.captcha-verified-indicator-${instanceId}`).forEach(indicator => {
             indicator.style.display = 'inline';
         });
@@ -79,52 +91,52 @@ class CaptchaVerification {
     }
 
     disableInstanceContent(instanceId) {
-    // Handle elements with captcha-verified- class
-    document.querySelectorAll(`.captcha-verified-${instanceId}`).forEach(element => {
-        element.classList.remove(`captcha-verified-${instanceId}`);
-        
-        // Restore original class for buttons
-        if (element.hasAttribute('data-original-class')) {
-            element.classList.add(element.getAttribute('data-original-class'));
-            element.removeAttribute('data-original-class');
-        }
-        
-        if (element.tagName === 'BUTTON' || element.tagName === 'A' || element.tagName === 'INPUT') {
-            element.disabled = true;
-        }
-        
-        // Restore protected-con- class for content
-        if (element.getAttribute('data-was-protected-con') === instanceId) {
-            element.classList.add(`protected-con-${instanceId}`);
-            element.removeAttribute('data-was-protected-con');
-        }
-        
-        if (element.classList.contains(`protected-con-${instanceId}`)) {
-            element.style.display = 'none';
-        }
-        
-        if (element.classList.contains(`captcha-verified-indicator-${instanceId}`)) {
-            element.style.display = 'none';
-        }
-    });
+        // Handle elements with captcha-verified- class
+        document.querySelectorAll(`.captcha-verified-${instanceId}`).forEach(element => {
+            element.classList.remove(`captcha-verified-${instanceId}`);
 
-    // Fallback: Also handle protected content that might not have captcha-verified- class
-    document.querySelectorAll(`.protected-con-${instanceId}`).forEach(content => {
-        content.style.display = 'none';
-    });
+            // Restore original class for buttons
+            if (element.hasAttribute('data-original-class')) {
+                element.classList.add(element.getAttribute('data-original-class'));
+                element.removeAttribute('data-original-class');
+            }
 
-    // Fallback: Also handle elements with data-was-protected-con that lost all classes
-    document.querySelectorAll(`[data-was-protected-con="${instanceId}"]`).forEach(content => {
-        content.classList.add(`protected-con-${instanceId}`);
-        content.style.display = 'none';
-        content.removeAttribute('data-was-protected-con');
-    });
+            if (element.tagName === 'BUTTON' || element.tagName === 'A' || element.tagName === 'INPUT') {
+                element.disabled = true;
+            }
 
-    // Ensure all protected buttons are disabled
-    document.querySelectorAll(`.protected-btn-${instanceId}`).forEach(btn => {
-        btn.disabled = true;
-    });
-}
+            // Restore protected-con- class for content
+            if (element.getAttribute('data-was-protected-con') === instanceId) {
+                element.classList.add(`protected-con-${instanceId}`);
+                element.removeAttribute('data-was-protected-con');
+            }
+
+            if (element.classList.contains(`protected-con-${instanceId}`)) {
+                element.style.display = 'none';
+            }
+
+            if (element.classList.contains(`captcha-verified-indicator-${instanceId}`)) {
+                element.style.display = 'none';
+            }
+        });
+
+        // Fallback: handle protected content that might not have captcha-verified- class
+        document.querySelectorAll(`.protected-con-${instanceId}`).forEach(content => {
+            content.style.display = 'none';
+        });
+
+        // Fallback: handle elements with data-was-protected-con that lost all classes
+        document.querySelectorAll(`[data-was-protected-con="${instanceId}"]`).forEach(content => {
+            content.classList.add(`protected-con-${instanceId}`);
+            content.style.display = 'none';
+            content.removeAttribute('data-was-protected-con');
+        });
+
+        // Ensure all protected buttons are disabled
+        document.querySelectorAll(`.protected-btn-${instanceId}`).forEach(btn => {
+            btn.disabled = true;
+        });
+    }
 
     disableAllContent() {
         document.querySelectorAll('[class*="protected-btn-"]').forEach(btn => {
