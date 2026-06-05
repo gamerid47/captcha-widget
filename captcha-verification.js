@@ -74,19 +74,29 @@ class CaptchaVerification {
     }
 
     disableInstanceContent(instanceId) {
-        document.querySelectorAll(`.captcha-verified-${instanceId}`).forEach(element => {
-            element.classList.remove(`captcha-verified-${instanceId}`);
-            if (element.classList.contains(`protected-btn-${instanceId}`)) {
-                element.disabled = true;
-            }
-            if (element.classList.contains(`protected-con-${instanceId}`)) {
-                element.style.display = 'none';
-            }
-            if (element.classList.contains(`captcha-verified-indicator-${instanceId}`)) {
-                element.style.display = 'none';
-            }
-        });
-    }
+    document.querySelectorAll(`.captcha-verified-${instanceId}`).forEach(element => {
+        element.classList.remove(`captcha-verified-${instanceId}`);
+        if (element.classList.contains(`protected-btn-${instanceId}`)) {
+            element.disabled = true;
+        }
+        if (element.classList.contains(`protected-con-${instanceId}`)) {
+            element.style.display = 'none';
+        }
+        if (element.classList.contains(`captcha-verified-indicator-${instanceId}`)) {
+            element.style.display = 'none';
+        }
+    });
+
+    // Also handle buttons that lost their protected-btn class during enable
+    document.querySelectorAll(`.protected-btn-${instanceId}`).forEach(btn => {
+        btn.disabled = true;
+    });
+
+    // Also handle content that lost its protected-con class during enable
+    document.querySelectorAll(`.protected-con-${instanceId}`).forEach(content => {
+        content.style.display = 'none';
+    });
+}
 
     disableAllContent() {
         document.querySelectorAll('[class*="protected-btn-"]').forEach(btn => {
