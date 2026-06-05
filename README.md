@@ -1,290 +1,223 @@
-🔒 CAPTCHA Widget
+# 🔒 gCAPTCHA Widget
 
-A lightweight, self-hosted CAPTCHA system for web projects. No external APIs required! Easily protect your content with a simple one-line inclusion.
+A free, self-hosted CAPTCHA widget that helps protect buttons, downloads, links, and hidden content on your website.
 
-✨ Features
+No API keys. No Google reCAPTCHA. Just include the loader and start protecting content.
 
-· 🚀 Easy integration - Add with one line of code
-· 🔒 Privacy-focused - No external dependencies
-· 🎨 Customizable - Themes and difficulty levels
-· 📱 Responsive - Works on all devices
-· ⚡ Lightweight - Only 5KB minified
-· 🎯 Auto-protection - Automatically locks/unlocks content
-· 💾 Session persistence - Remembers verification across page reloads
-· ♿ Accessible - Screen reader and keyboard friendly
+## ✨ Features
 
-🚀 Quick Start
+- 🚀 Easy integration
+- 🔒 Self-hosted
+- 📱 Mobile friendly
+- 🎯 Multiple CAPTCHA types
+- 🧩 Image selection CAPTCHA
+- 🎲 Slide puzzle CAPTCHA
+- 🖱️ Image click sequence CAPTCHA
+- ⚡ Automatic initialization
+- 🔓 Protect buttons and content
+- 📡 Verification event system
+- 🎫 Verification token generation
+- ♻️ Reset support
+- 🔢 Unlimited CAPTCHA instances per page
 
-Method 1: One-line inclusion (Easiest)
+## 🚀 Quick Start
 
-```html
-<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/auto-loader.js"></script>
-```
-
-Method 2: Standard inclusion (Recommended)
-
-```html
-<div id="captcha-container"></div>
-<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/loader.js"></script>
-```
-
-Method 3: Manual initialization (Advanced)
+Add the loader script:
 
 ```html
-<div id="my-captcha"></div>
-<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/captcha-verification.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/captcha-widget.js"></script>
-<script>
-    window.initCaptcha('my-captcha', {
-        theme: 'dark',
-        difficulty: 'medium'
-    });
-</script>
+<script src="https://gamerid47.github.io/captcha-widget/loader.js"></script>
 ```
 
-🎨 Customization
-
-Theme Options
+Create a CAPTCHA container:
 
 ```html
-<div id="captcha-container" data-theme="dark"></div>
-<!-- or -->
-<script>
-window.initCaptcha('captcha-container', {
-    theme: 'light' // 'light' or 'dark'
-});
-</script>
+<div id="captcha-container-1"></div>
 ```
 
-Difficulty Levels
+Protect a button:
 
 ```html
-<div id="captcha-container" data-difficulty="hard"></div>
-<!-- or -->
-<script>
-window.initCaptcha('captcha-container', {
-    difficulty: 'easy' // 'easy' (4 chars), 'medium' (5 chars), 'hard' (6 chars)
-});
-</script>
+<button disabled class="protected-btn-1"> Download File </button>
 ```
 
-Custom Text
+Protect content:
 
 ```html
-<script>
-window.initCaptcha('captcha-container', {
-    customText: 'ABCD12' // Fixed CAPTCHA text
-});
-</script>
+<div class="protected-con-1" style="display:none;"> Secret Content </div>
 ```
 
-🔒 Protecting Content
+That's all.
 
-Protect Buttons
+📦 How It Works
+
+Each CAPTCHA instance uses a number.
+
+Example:
 
 ```html
-<button class="protected-btn" onclick="sensitiveAction()">
-    Sensitive Action
-</button>
-
-<a href="#secure" class="protected-btn">Secure Link</a>
+<div id="captcha-container-1"></div>
 ```
 
-Protect Content Sections
+Protect buttons:
 
 ```html
-<div class="protected-content">
-    <h3>Premium Content</h3>
-    <p>This is only visible after CAPTCHA verification.</p>
-</div>
+<button disabled class="protected-btn-1"> Download </button>
 ```
 
-Show Verification Badges
+Protect content:
 
 ```html
-<span class="captcha-verified-indicator">✅ Verified</span>
+<div class="protected-con-1" style="display:none;"> Protected Content </div>
 ```
 
-⚙️ Advanced Configuration
+Completing CAPTCHA instance 1 unlocks: protected-btn-1 protected-con-1
 
-Complete Options Example
+🔢 Multiple CAPTCHA Instances
+
+Example:
 
 ```html
-<script>
-window.initCaptcha('captcha-container', {
-    // Appearance
-    theme: 'dark',           // 'light' or 'dark'
-    difficulty: 'hard',      // 'easy', 'medium', 'hard'
-    
-    // Behavior
-    autoVerify: true,        // Auto-enable protected content
-    customText: null,        // Fixed CAPTCHA text
-    
-    // Callbacks
-    onSuccess: function(captchaText) {
-        console.log('Success! Text was:', captchaText);
-        // Custom success logic
-    },
-    
-    onError: function() {
-        console.log('Verification failed');
-        // Custom error handling
-    }
-});
-</script>
+<div id="captcha-container-1"></div>
+<div id="captcha-container-2"></div>
 ```
 
-📡 Event System
+Protected elements:
 
-Listen for Verification
+```html
+<button disabled class="protected-btn-1"> Download A </button>
+<button disabled class="protected-btn-2"> Download B </button>
+<div class="protected-con-1" style="display:none;"> Content A </div>
+<div class="protected-con-2" style="display:none;"> Content B </div>
+```
+
+Each CAPTCHA only unlocks its matching protected elements.
+
+🛡️ Protecting Download Buttons
+
+```html
+<div id="captcha-container-1"></div>
+<a href="file.zip" download class="protected-btn-1"> Download File </a>
+```
+
+🛡️ Protecting Hidden Sections
+
+```html
+<div id="captcha-container-1"></div>
+<div class="protected-con-1" style="display:none;"> Premium Content </div>
+```
+
+📡 Verification Event
+
+Listen for successful verification:
 
 ```javascript
 document.addEventListener('captchaVerified', function(event) {
-    console.log('User verified!', event.detail);
-    // event.detail contains: { token: 'string', timestamp: number }
-});
-```
-
-Custom Callbacks
-
-```javascript
-window.initCaptcha('captcha-container', {
-    onSuccess: function(captchaText) {
-        // Custom actions after verification
-        enablePremiumFeatures();
-    },
-    onError: function() {
-        // Handle failed attempts
-        showWarningMessage();
-    }
+  console.log(event.detail.instanceId);
+  console.log(event.detail.token);
+  console.log(event.detail.timestamp);
 });
 ```
 
 🔧 API Reference
 
-Verification Methods
+Check verification status:
 
 ```javascript
-// Check if user is verified
-if (window.captchaVerification.getVerificationStatus()) {
-    proceedWithAction();
-}
+window.captchaVerification.getVerificationStatus('1');
+```
 
-// Get verification token
-const token = window.captchaVerification.getVerificationToken();
+Get verification token:
 
-// Reset verification (logout)
+```javascript
+window.captchaVerification.getVerificationToken('1');
+```
+
+Get all verified instances:
+
+```javascript
+window.captchaVerification.getVerifiedInstances();
+```
+
+Check if any CAPTCHA is verified:
+
+```javascript
+window.captchaVerification.isAnyVerified();
+```
+
+Reset specific instance:
+
+```javascript
+window.captchaVerification.resetVerification('1');
+```
+
+Reset all instances:
+
+```javascript
 window.captchaVerification.resetVerification();
-
-// Manual verification (when autoVerify: false)
-window.captchaVerification.markAsVerified();
 ```
 
-CAPTCHA Instance Methods
+Remove instance:
 
 ```javascript
-const captcha = window.initCaptcha('container-id');
-
-// Refresh CAPTCHA
-captcha.refresh();
-
-// Check verification status
-captcha.getVerificationStatus();
-
-// Reset CAPTCHA
-captcha.reset();
+window.captchaVerification.removeInstance('1');
 ```
 
-🎯 Real-World Examples
+📡 Manual Verification
 
-Login Form Protection
+Manually mark an instance as verified:
 
-```html
-<form id="loginForm">
-    <input type="email" placeholder="Email" required>
-    <input type="password" placeholder="Password" required>
-    
-    <div id="captcha-container"></div>
-    
-    <button type="submit" class="protected-btn">Login</button>
-</form>
-
-<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/loader.js"></script>
-<script>
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        if (window.captchaVerification.getVerificationStatus()) {
-            performLogin();
-        } else {
-            alert('Please complete CAPTCHA verification');
-        }
-    });
-</script>
+```javascript
+window.captchaVerification.markAsVerified('1');
 ```
 
-Download Protection
+Note: This is intended for custom integrations and testing. Do not rely on client-side verification alone for high-security applications.
 
-```html
-<div id="captcha-container"></div>
+🎉 Success & Error Callbacks
 
-<a href="secure-file.pdf" class="protected-btn" download>
-    Download Secure File
-</a>
-
-<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/loader.js"></script>
-<script>
-    document.querySelector('a.protected-btn').addEventListener('click', function(e) {
-        if (!window.captchaVerification.getVerificationStatus()) {
-            e.preventDefault();
-            alert('Please complete CAPTCHA verification first.');
-        }
-    });
-</script>
+```javascript
+window.initCaptcha('captcha-container-1', {
+  onSuccess: function() {
+    console.log('Verified');
+  },
+  onError: function() {
+    console.log('Failed');
+  }
+});
 ```
 
-Multi-CAPTCHA Page
+⚠️ Important
+
+Protected buttons should be disabled by default:
 
 ```html
-<!-- Section 1 -->
-<div id="captcha-login" data-theme="light"></div>
-<button class="protected-btn" data-section="login">Login</button>
-
-<!-- Section 2 -->
-<div id="captcha-download" data-theme="dark" data-difficulty="hard"></div>
-<button class="protected-btn" data-section="download">Download</button>
-
-<script>
-    // Initialize multiple CAPTCHAs
-    window.initCaptcha('captcha-login');
-    window.initCaptcha('captcha-download');
-</script>
+<button disabled class="protected-btn-1"> Download </button>
 ```
 
-🌐 CDN URLs
-
-Primary CDN (Recommended)
+Protected content should be hidden by default:
 
 ```html
-https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/
+<div class="protected-con-1" style="display:none;"> Hidden Content </div>
 ```
 
-GitHub Pages (Alternative)
+This prevents content from appearing before the CAPTCHA system loads.
 
-```html
+🌐 URLs
+
+Loader:
+https://gamerid47.github.io/captcha-widget/loader.js
+
+GitHub Pages:
 https://gamerid47.github.io/captcha-widget/
-```
 
-Individual Files
+GitHub Repository:
+https://github.com/gamerid47/captcha-widget
 
-```html
-<!-- Loader -->
-<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/loader.js"></script>
+📄 License
 
-<!-- Auto-loader -->
-<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/auto-loader.js"></script>
+Free for personal and commercial use.
 
-<!-- Core files -->
-<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/captcha-widget.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/captcha-verification.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gamerid47/captcha-widget@latest/styles.css">
-```
+👨‍💻 Author
+
+Gamer Id47
+GitHub: https://github.com/gamerid47
+Email: id2281449@gmail.com
