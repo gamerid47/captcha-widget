@@ -39,15 +39,20 @@ class CaptchaVerification {
     }
 
     enableInstanceContent(instanceId) {
-        document.querySelectorAll(`.protected-btn-${instanceId}`).forEach(btn => {
-            btn.disabled = false;
-            btn.classList.remove(`protected-btn-${instanceId}`);
-            btn.classList.add(`captcha-verified-${instanceId}`);
-        });
+    document.querySelectorAll(`.protected-btn-${instanceId}`).forEach(btn => {
+        btn.disabled = false;
+        // Store the original class so we can restore it on disable
+        btn.setAttribute('data-original-class', `protected-btn-${instanceId}`);
+        btn.classList.remove(`protected-btn-${instanceId}`);
+        btn.classList.add(`captcha-verified-${instanceId}`);
+    });
         document.querySelectorAll(`.protected-con-${instanceId}`).forEach(content => {
-            content.style.display = 'block';
-            content.classList.add(`captcha-verified-${instanceId}`);
-        });
+    content.style.display = 'block';
+    // Store marker so we can identify this on disable
+    content.setAttribute('data-was-protected-con', instanceId);
+    content.classList.remove(`protected-con-${instanceId}`);
+    content.classList.add(`captcha-verified-${instanceId}`);
+});
         document.querySelectorAll(`.captcha-verified-indicator-${instanceId}`).forEach(indicator => {
             indicator.style.display = 'inline';
         });
