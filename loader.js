@@ -73,7 +73,10 @@
 
         captchaContainers.forEach(containerId => {
             try {
+                const container = document.getElementById(containerId);
+                const expiry = parseInt(container.getAttribute('data-expiry') || '60');
                 window.initCaptcha(containerId, {
+                    expiry: expiry,
                     onSuccess: function() {
                     },
                     onError: function() {
