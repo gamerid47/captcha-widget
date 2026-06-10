@@ -14,7 +14,7 @@
     };
 // After CONFIG object, add:
 const BACKEND_CONFIG = {
-    url: window.gCaptchaConfig?.backendUrl || null,
+    url: (window.gCaptchaConfig && window.gCaptchaConfig.backendUrl) || null,
     requireBackend: true  // FORCE backend requirement
 };
 
