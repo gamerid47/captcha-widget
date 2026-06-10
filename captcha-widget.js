@@ -1292,48 +1292,80 @@ const shapeNewPosition = minShapePosition + progress * (maxShapePosition - minSh
         }
     }
 
+
     // ========== UTILITY FUNCTIONS ==========
 
-    completeVerification() {
-        const instanceId = this.instanceId;
-        const modalgic = document.getElementById(`verificationModalgic-${instanceId}`);
-        const containergic = document.getElementById(`captchaContainergic-${instanceId}`);
-        const textElementgic = document.getElementById(`statusTextgic-${instanceId}`);
-        const triggergic = document.getElementById(`verifyTriggergic-${instanceId}`);
+    async completeVerification() {
+    const instanceId = this.instanceId;
+    const modalgic = document.getElementById(`verificationModalgic-${instanceId}`);
+    const containergic = document.getElementById(`captchaContainergic-${instanceId}`);
+    const textElementgic = document.getElementById(`statusTextgic-${instanceId}`);
+    const triggergic = document.getElementById(`verifyTriggergic-${instanceId}`);
 
-        modalgic.style.display = 'none';
-        containergic.classList.remove(`loading-stategic-${instanceId}`);
-        textElementgic.classList.add(`success-textgic-${instanceId}`);
-        textElementgic.textContent = 'Verification Successful.';
-        containergic.classList.add(`success-stategic-${instanceId}`);
-
-        const loadingBarContainergic = document.querySelector(`.loading-bar-containergic-${instanceId}`);
-        const loadingBargic = document.getElementById(`loadingBargic-${instanceId}`);
-        loadingBarContainergic.classList.remove(`activegic-${instanceId}`);
-
-        const successIndicatorgic = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        successIndicatorgic.setAttribute("class", `tick-animgic-${instanceId}`);
-        successIndicatorgic.setAttribute("viewBox", "0 0 24 24");
-        successIndicatorgic.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
-
-        if (triggergic) {
-            triggergic.replaceWith(successIndicatorgic);
+    // COLLECT THE SOLUTION BASED ON CAPTCHA TYPE
+    let solution = null;
+    
+    if (this.currentCaptchaType === 1) {
+        // Type 1: Image selection - send selected image types
+        solution = this.selectedImages;
+    } else if (this.currentCaptchaType === 2) {
+        // Type 2: Slide puzzle - send final position
+        const randomShape = document.getElementById(`randomShapegic-${instanceId}`);
+        if (randomShape) {
+            const shapeLeft = parseInt(randomShape.style.left) || 0;
+            solution = { position: shapeLeft, target: this.targetPosition, distance: Math.abs(shapeLeft - this.targetPosition) };
+        } else {
+            solution = { success: false };
         }
-        
-        this.isVerified = true;
-this.startExpiryTimer();
-
-// Notify verification system
-
-        // Notify verification system
-        if (window.captchaVerification) {
-            window.captchaVerification.markAsVerified(this.instanceId);
-        }
-
-        if (this.options.onSuccess) {
-            this.options.onSuccess();
-        }
+    } else if (this.currentCaptchaType === 3) {
+        // Type 3: Image click sequence
+        solution = this.clickedItems;
     }
+    
+    // SEND TO BACKEND FOR VERIFICATION
+    let verified = false;
+    
+    if (window.captchaVerification && window.captchaVerification.verifyWithBackend) {
+        verified = await window.captchaVerification.verifyWithBackend(instanceId, solution);
+    } else {
+        console.error('[gCAPTCHA] No backend verification available');
+        this.handleFailuregic();
+        return;
+    }
+    
+    if (!verified) {
+        this.handleFailuregic();
+        return;
+    }
+    
+    // BACKEND CONFIRMED - Now show success UI
+    modalgic.style.display = 'none';
+    containergic.classList.remove(`loading-stategic-${instanceId}`);
+    textElementgic.classList.add(`success-textgic-${instanceId}`);
+    textElementgic.textContent = 'Verification Successful.';
+    containergic.classList.add(`success-stategic-${instanceId}`);
+
+    const loadingBarContainergic = document.querySelector(`.loading-bar-containergic-${instanceId}`);
+    if (loadingBarContainergic) {
+        loadingBarContainergic.classList.remove(`activegic-${instanceId}`);
+    }
+
+    const successIndicatorgic = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    successIndicatorgic.setAttribute("class", `tick-animgic-${instanceId}`);
+    successIndicatorgic.setAttribute("viewBox", "0 0 24 24");
+    successIndicatorgic.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+
+    if (triggergic) {
+        triggergic.replaceWith(successIndicatorgic);
+    }
+    
+    this.isVerified = true;
+    this.startExpiryTimer();
+
+    if (this.options.onSuccess) {
+        this.options.onSuccess();
+    }
+}
 
     handleFailuregic() {
         if (this.isVerified) return;
