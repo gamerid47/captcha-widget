@@ -923,10 +923,13 @@ this.expiryTimestamp = null;
     }
 
     // Type 1: Image Selection
-    initializeType1() {
-        this.selectedImages = [];
-        this.createCaptchaGrid();
-    }
+    async initializeType1() {
+    this.selectedImages = [];
+    this.createCaptchaGrid();
+    
+    // Send correct answers to backend
+    await this.createBackendChallenge(1, this.currentCorrectAnswers, {});
+}
 
     createCaptchaGrid() {
         const instanceId = this.instanceId;
@@ -994,7 +997,7 @@ this.expiryTimestamp = null;
     }
 
     // Type 2: Slide Puzzle
-    initializeType2() {
+    async initializeType2() {
         this.isDragging = false;
         this.sliderPosition = 5;
         this.isFirstTry = true;
@@ -1039,6 +1042,8 @@ const trackWidth = trackElement ? trackElement.getBoundingClientRect().width : 2
         } else {
             if (randomShape) randomShape.style.background = this.getShapeColor(this.currentShapeType);
         }
+// Send target position to backend
+await this.createBackendChallenge(2, { target: this.targetPosition, shapeType: this.currentShapeType }, {});
     }
 
     getShapeColor(shapeType) {
@@ -1171,7 +1176,7 @@ const shapeNewPosition = minShapePosition + progress * (maxShapePosition - minSh
     }
 
     // Type 3: Image Click
-    initializeType3() {
+    async initializeType3() {
         this.currentImageSet = Math.random() > 0.5 ? 1 : 2;
         const imageSet = this.imageSets[this.currentImageSet];
 
@@ -1198,7 +1203,24 @@ const shapeNewPosition = minShapePosition + progress * (maxShapePosition - minSh
         if (clickImage && imageSet) {
             clickImage.src = imageSet.imageUrl;
         }
+// Send correct click sequence to backend
+await this.createBackendChallenge(3, this.imageSets[this.currentImageSet].clickSequence, {});
     }
+async createBackendChallenge(type, answer, challengeData) {
+    if (window.captchaVerification && window.captchaVerification.createChallenge) {
+        const challengeId = await window.captchaVerification.createChallenge(
+            this.instanceId, 
+            type, 
+            answer, 
+            challengeData
+        );
+        if (challengeId) {
+            this.currentChallengeId = challengeId;
+            return true;
+        }
+    }
+    return false;
+}
 
     handleImageClick(e) {
         const maxClicks = this.imageSets[this.currentImageSet].clickSequence.length;
