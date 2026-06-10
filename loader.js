@@ -138,11 +138,6 @@ if (!BACKEND_CONFIG.url) {
                 console.log('[CAPTCHA Loader] Initializing:', containerId, '| data-expiry attribute:', JSON.stringify(expiryAttr), '| parsed expiry:', expiry, 'seconds');
 
                 window.initCaptcha(containerId, {
-// Pass backend config to CAPTCHA instance
-if (BACKEND_CONFIG.url && window.captchaVerification) {
-    // Backend URL is already set in captchaVerification constructor
-    console.log('[CAPTCHA Loader] Backend configured for instance:', containerId);
-}
                     expiry: expiry,
                     onSuccess: function() {
                         console.log('[CAPTCHA Loader] ✅ onSuccess callback fired for:', containerId);
@@ -151,6 +146,11 @@ if (BACKEND_CONFIG.url && window.captchaVerification) {
                         console.log('[CAPTCHA Loader] ❌ onError callback fired for:', containerId);
                     }
                 });
+                // Pass backend config to CAPTCHA instance
+if (BACKEND_CONFIG.url && window.captchaVerification) {
+    // Backend URL is already set in captchaVerification constructor
+    console.log('[CAPTCHA Loader] Backend configured for instance:', containerId);
+}
 
                 console.log('[CAPTCHA Loader] initCaptcha() called for:', containerId);
             } catch (error) {
