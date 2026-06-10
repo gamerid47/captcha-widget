@@ -11,8 +11,8 @@ class CaptchaVerification {
         this.pendingChallenges = new Map();
         
         // Get backend URL from global config
-        this.backendUrl = window.gCaptchaConfig?.backendUrl || null;
-        this.requireBackend = window.gCaptchaConfig?.requireBackend || false;
+        this.backendUrl = (window.gCaptchaConfig && window.gCaptchaConfig.backendUrl) || null;
+this.requireBackend = (window.gCaptchaConfig && window.gCaptchaConfig.requireBackend) || false;
         
         // Warn if backend is required but not configured
         if (this.requireBackend && !this.backendUrl) {
