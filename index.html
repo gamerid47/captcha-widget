@@ -13,7 +13,14 @@
     <meta name="twitter:title" content="Free Protected Security CAPTCHA Widget">
     <meta name="twitter:description" content="Easy-to-implement CAPTCHA protection for your website with multiple instances support.">
     <title>Free Protected Security CAPTCHA Widget | Easy Implementation</title>
-    <script src="https://gamerid47.github.io/captcha-widget/loader.js"></script>
+    <!-- CONFIGURE BACKEND (REPLACE WITH YOUR CLOUDFLARE WORKER URL) -->
+<script>
+    window.gCaptchaConfig = {
+        backendUrl: 'https://gcaptcha-backend.YOUR_USERNAME.workers.dev',
+        requireBackend: true
+    };
+</script>
+<script src="https://gamerid47.github.io/captcha-widget/loader.js"></script>
     <style>
         .a1b2c3dgic, .spat{
     white-space: nowrap;
