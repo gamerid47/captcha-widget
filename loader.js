@@ -12,6 +12,20 @@
         containerPattern: /^captcha-container-\d+$/,
         defaultInstance: 'captcha-container-1'
     };
+// After CONFIG object, add:
+const BACKEND_CONFIG = {
+    url: window.gCaptchaConfig?.backendUrl || null,
+    requireBackend: true  // FORCE backend requirement
+};
+
+if (!BACKEND_CONFIG.url) {
+    console.error('[gCAPTCHA] ERROR: Cloudflare backend URL required. Set window.gCaptchaConfig.backendUrl');
+    // Optionally show a visible error on page
+    const errorDiv = document.createElement('div');
+    errorDiv.style.cssText = 'position:fixed;top:0;left:0;right:0;background:red;color:white;padding:10px;text-align:center;z-index:99999';
+    errorDiv.innerHTML = '⚠️ gCAPTCHA: Cloudflare backend not configured. Visit <a href="https://github.com/gamerid47/captcha-widget" style="color:white">documentation</a>';
+    document.body.appendChild(errorDiv);
+}
 
     function loadCSS(href) {
         return new Promise((resolve, reject) => {
