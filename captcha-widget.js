@@ -1043,7 +1043,7 @@ const trackWidth = trackElement ? trackElement.getBoundingClientRect().width : 2
             if (randomShape) randomShape.style.background = this.getShapeColor(this.currentShapeType);
         }
 // Send target position to backend
-await this.createBackendChallenge(2, { target: this.targetPosition, shapeType: this.currentShapeType }, {});
+await this.createBackendChallenge(2, true, {});
     }
 
     getShapeColor(shapeType) {
@@ -1324,33 +1324,38 @@ async createBackendChallenge(type, answer, challengeData) {
     const textElementgic = document.getElementById(`statusTextgic-${instanceId}`);
     const triggergic = document.getElementById(`verifyTriggergic-${instanceId}`);
 
-    // COLLECT THE SOLUTION BASED ON CAPTCHA TYPE
+    // COLLECT SOLUTION BASED ON CAPTCHA TYPE
     let solution = null;
     
     if (this.currentCaptchaType === 1) {
-        // Type 1: Image selection - send selected image types
+        // Type 1: Image selection - send array of selected image types
         solution = this.selectedImages;
+        console.log('[DEBUG] Type 1 solution:', solution);
+        
     } else if (this.currentCaptchaType === 2) {
-        // Type 2: Slide puzzle - send final position
+        // Type 2: Slide puzzle - send the distance (0 = perfect match)
         const randomShape = document.getElementById(`randomShapegic-${instanceId}`);
+        let distance = 999;
         if (randomShape) {
             const shapeLeft = parseInt(randomShape.style.left) || 0;
-            solution = { position: shapeLeft, target: this.targetPosition, distance: Math.abs(shapeLeft - this.targetPosition) };
-        } else {
-            solution = { success: false };
+            distance = Math.abs(shapeLeft - this.targetPosition);
         }
+        // Send boolean: true if distance is within tolerance (less than 5px)
+        solution = (distance < 5);
+        console.log('[DEBUG] Type 2 solution (distance:', distance, '):', solution);
+        
     } else if (this.currentCaptchaType === 3) {
         // Type 3: Image click sequence
         solution = this.clickedItems;
+        console.log('[DEBUG] Type 3 solution:', solution);
     }
     
-    // SEND TO BACKEND FOR VERIFICATION
+    // SEND TO BACKEND
     let verified = false;
     
     if (window.captchaVerification && window.captchaVerification.verifyWithBackend) {
         verified = await window.captchaVerification.verifyWithBackend(instanceId, solution);
     } else {
-        console.error('[gCAPTCHA] No backend verification available');
         this.handleFailuregic();
         return;
     }
@@ -1360,7 +1365,7 @@ async createBackendChallenge(type, answer, challengeData) {
         return;
     }
     
-    // BACKEND CONFIRMED - Now show success UI
+    // BACKEND CONFIRMED - Show success UI
     modalgic.style.display = 'none';
     containergic.classList.remove(`loading-stategic-${instanceId}`);
     textElementgic.classList.add(`success-textgic-${instanceId}`);
