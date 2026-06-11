@@ -1330,7 +1330,7 @@ async createBackendChallenge(type, answer, challengeData) {
     if (this.currentCaptchaType === 1) {
         // Type 1: Image selection - send array of selected image types
         solution = this.selectedImages;
-        console.log('[DEBUG] Type 1 solution:', solution);
+        
         
     } else if (this.currentCaptchaType === 2) {
         // Type 2: Slide puzzle - send the distance (0 = perfect match)
@@ -1342,12 +1342,12 @@ async createBackendChallenge(type, answer, challengeData) {
         }
         // Send boolean: true if distance is within tolerance (less than 5px)
         solution = (distance < 5);
-        console.log('[DEBUG] Type 2 solution (distance:', distance, '):', solution);
+        
         
     } else if (this.currentCaptchaType === 3) {
         // Type 3: Image click sequence
         solution = this.clickedItems;
-        console.log('[DEBUG] Type 3 solution:', solution);
+        
     }
     
     // SEND TO BACKEND
